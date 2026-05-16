@@ -38,7 +38,7 @@ st.markdown(
             margin-right: auto !important;
             padding-left: clamp(1rem, 4vw, 1.35rem);
             padding-right: clamp(1rem, 4vw, 1.35rem);
-            padding-top: 1.55rem !important;
+            padding-top: 10px !important;
             padding-bottom: 1.55rem !important;
         }
 
