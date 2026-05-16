@@ -13,7 +13,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 st.set_page_config(
     page_title="Vouli-AI: Βοηθός Νομοθεσίας",
     page_icon="🏛️",
-    layout="centered"
+    layout="centered",
 )
 
 # 2. Φόρτωση Δεδομένων
@@ -28,12 +28,77 @@ def load_knowledge_base():
 
 chunks = load_knowledge_base()
 
-# --- UI ΕΦΑΡΜΟΓΗΣ ---
-st.title("🏛️ Vouli-AI: Βοηθός Νομοθεσίας")
-st.markdown("""
-Το **Vouli-AI** βοηθά πολίτες και χρήστες να **κατανοήσουν** νόμους, **τρέχοντα νομοσχέδια**, συνεδριάσεις και νομοθετική διαδικασία,
-**βασιζόμενο μόνο σε επίσημα κείμενα** που έχουν ενσωματωθεί στη βάση (πράξεις, σχέδια νόμου, εισηγήσεις, πρακτικά/στοιχεία όπου έχουν εισαχθεί)· οι παραπομπές **Πηγή** και **Σελίδα** προέρχονται από αυτά τα αποσπάσματα.
-""")
+st.markdown(
+    """
+    <style>
+        /* Focused centred column (~800px) — not full-bleed desktop */
+        .main .block-container {
+            max-width: 800px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-left: clamp(1rem, 4vw, 1.35rem);
+            padding-right: clamp(1rem, 4vw, 1.35rem);
+            padding-top: 1.55rem !important;
+            padding-bottom: 1.55rem !important;
+        }
+
+        /* Page title — larger, tighter measure */
+        .main .block-container h1 {
+            font-size: clamp(1.9rem, 4.8vw, 2.15rem);
+            font-weight: 650;
+            line-height: 1.22 !important;
+            letter-spacing: -0.017em;
+        }
+
+        /* Body / subtitles (Markdown in main pane) */
+        .main .block-container .stMarkdown p {
+            font-size: 1.09rem !important;
+            line-height: 1.6 !important;
+            letter-spacing: 0.01em;
+        }
+
+        /* Buttons — taller text, clearer line-height */
+        .main .block-container .stButton > button {
+            font-size: 0.98rem !important;
+            line-height: 1.5 !important;
+            padding-top: 0.52rem !important;
+            padding-bottom: 0.52rem !important;
+        }
+
+        /* Chat transcripts (narrower specificity so they win vs body markdown) */
+        .main .block-container section[data-testid="stChatMessage"] .stMarkdown p,
+        .main .block-container section[data-testid="stChatMessage"] .stMarkdown li {
+            font-size: 1.06rem !important;
+            line-height: 1.6 !important;
+        }
+
+        [data-testid="stChatInput"] textarea {
+            font-size: 1.035rem !important;
+            line-height: 1.52 !important;
+        }
+
+        /* Sidebar typography */
+        [data-testid="stSidebar"] h1,
+        [data-testid="stSidebar"] h2,
+        [data-testid="stSidebar"] h3 {
+            font-size: 1.06rem !important;
+            line-height: 1.45 !important;
+        }
+        [data-testid="stSidebar"] .stMarkdown p {
+            font-size: 0.98rem !important;
+            line-height: 1.55 !important;
+        }
+        [data-testid="stSidebar"] label p {
+            font-size: 0.96rem !important;
+            line-height: 1.45 !important;
+        }
+        [data-testid="stSidebar"] button {
+            font-size: 0.97rem !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 with st.sidebar:
     st.header("Πληροφορίες")
@@ -52,7 +117,91 @@ with st.sidebar:
         for s in sources:
             st.caption(f"• {s}")
 
-st.divider()
+# --- Κεντρικό μέτωπο ---
+st.title("🏛️ Vouli-AI: Βοηθός Νομοθεσίας")
+
+st.markdown(
+    '<div style="height:0.45rem;" aria-hidden="true"></div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    "Το **Vouli-AI** βοηθά πολίτες και χρήστες να **κατανοήσουν** νόμους, **τρέχοντα νομοσχέδια**, "
+    "συνεδριάσεις και νομοθετική διαδικασία. **Βασίζεται αποκλειστικά σε επίσημα κείμενα** που έχουν "
+    "ενσωματωθεί στη βάση (πράξεις, σχέδια νόμου, εισηγήσεις, πρακτικά ή άλλα στοιχεία που έχουν εισαχθεί)· "
+    "οι παραπομπές **Πηγή** και **Σελίδα** προέρχονται από τα αντίστοιχα αποσπάσματα."
+)
+
+st.markdown(
+    '<p style="font-size:0.865rem;font-weight:500;color:rgba(105,113,129,0.96);margin:0.52rem 0 0;line-height:1.45;">'
+    "Πώς μπορεί να βοηθήσει"
+    '</p>'
+    '<div style="font-size:0.93rem;color:rgba(115,120,133,0.94);line-height:1.5;margin:0.22rem 0 0;font-weight:400;">'
+    "• Σύνοψη νομοσχεδίων<br>"
+    "• Ανάλυση νόμων<br>"
+    "• Κατανόηση συνεδριάσεων<br>"
+    "• Επίσημες παραπομπές"
+    "</div>",
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    '<div style="height:0.95rem;" aria-hidden="true"></div>',
+    unsafe_allow_html=True,
+)
+
+# --- Γρήγορη διάδραση κοντά στο κείμενο εισαγωγής ---
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+PRIMARY_DEMO = "Τι ψηφίστηκε στο τελευταίο νομοσχέδιο;"
+DEMO_LATEST_BILL_REWRITE_QUESTION = (
+    "Τι προβλέπει το νομοσχέδιο για το Ταμείο Καινοτομίας και την πρόσβαση ασθενών σε νέα φάρμακα και θεραπείες;"
+)
+
+DEMO_PROMPTS_SECONDARY = [
+    "Τι αλλάζει με την επιστολική ψήφο;",
+    "Ποιους αφορά ο νόμος;",
+    "Δώσε μου σύντομη περίληψη σε απλά ελληνικά.",
+]
+
+clicked_prompt_demo = None
+st.markdown(
+    '<p style="margin:0 0 0.35rem;font-size:1.05rem;font-weight:600;color:#31333F;letter-spacing:0.015em;line-height:1.45;">Δοκιμάστε</p>'
+    '<p style="margin:0 0 0.5rem;font-size:0.895rem;line-height:1.5;color:#69717d;font-weight:400;">'
+    "Γρήγορη υπόδειξη ερωτημάτων· επίσης μπορείτε να συντάξετε δική σας ερώτηση παρακάτω."
+    '</p>',
+    unsafe_allow_html=True,
+)
+
+_pb_l, _pb_mid, _pb_r = st.columns([2.2, 4.85, 2.2])
+with _pb_mid:
+    if st.button(
+        PRIMARY_DEMO,
+        key="demo_last_bill_vote",
+        type="primary",
+        use_container_width=True,
+    ):
+        clicked_prompt_demo = PRIMARY_DEMO
+
+st.markdown('<div style="height:0.42rem;"></div>', unsafe_allow_html=True)
+_sc1, _sc2, _sc3 = st.columns(3)
+with _sc1:
+    if st.button(DEMO_PROMPTS_SECONDARY[0], key="demo_vote_by_mail"):
+        clicked_prompt_demo = DEMO_PROMPTS_SECONDARY[0]
+with _sc2:
+    if st.button(DEMO_PROMPTS_SECONDARY[1], key="demo_who_law"):
+        clicked_prompt_demo = DEMO_PROMPTS_SECONDARY[1]
+with _sc3:
+    if st.button(DEMO_PROMPTS_SECONDARY[2], key="demo_summary"):
+        clicked_prompt_demo = DEMO_PROMPTS_SECONDARY[2]
+
+st.markdown(
+    '<div style="height:0.55rem;"></div>'
+    '<hr style="margin:0.4rem 0 0;border:none;border-top:1px solid rgba(229,231,239,0.88);" />'
+    '<div style="height:1rem;"></div>',
+    unsafe_allow_html=True,
+)
 
 # --- ΒΟΗΘΗΤΙΚΑ ---
 def cosine_sim(a, b) -> float:
@@ -103,13 +252,282 @@ def used_sources_footer(scored_chunks) -> str:
         f"{body}"
     )
 
+
+def get_knowledge_base_summary():
+    """Αριθμός διακριτών πηγών, συνολικά chunks και λίστα πηγών από τα φορτωμένα chunks."""
+    unique_sources = sorted(
+        set(
+            c.get("source", c.get("source_id", "Άγνωστη πηγή"))
+            for c in chunks
+        )
+    )
+    return len(unique_sources), len(chunks), unique_sources
+
+
+def is_metadata_question(question: str) -> bool:
+    """Ερωτήσεις inventory για τι έχει φορτωθεί στη βάση — όχι περιεχόμενο νόμου."""
+    q = " ".join((question or "").strip().lower().split())
+    if not q:
+        return False
+
+    needles = (
+        "πόσους νόμους έχεις",
+        "πόσους νόμους έχουν",
+        "πόσους νόμους",
+        "πόσοι νόμοι έχουν",
+        "πόσοι νόμοι",
+        "πόσα έγγραφα έχεις",
+        "πόσα έγγραφα έχουν",
+        "πόσα έγγραφα",
+        "τι πηγές έχεις",
+        "τι πηγές έχουν",
+        "τι πηγές",
+        "ποιες πηγές",
+        "τι έχεις μέσα",
+        "τι έχεις στη βάση",
+        "τι έχεις στην βάση",
+    )
+    if any(s in q for s in needles):
+        return True
+    if "τι έχεις" in q and "βάση" in q:
+        return True
+    if "ποιοι νόμοι" in q and (
+        "καταχωρημέν" in q or "βάση" in q or "έχεις" in q
+    ):
+        return True
+    return False
+
+
+def _normalize_q(question: str) -> str:
+    return " ".join((question or "").strip().lower().split())
+
+
+def is_latest_bill_question(question: str) -> bool:
+    """Εντοπισμός αναφορών «τελευταίο / πιο πρόσφατο νομοσχέδιο» ή «ψηφίστηκε πρόσφατα» (χωρίς χρονική ερμηνεία στο embeddings)."""
+    n = _normalize_q(question)
+    needles = (
+        "τελευταίο νομοσχέδιο",
+        "τελευταιο νομοσχεδιο",
+        "πιο πρόσφατο νομοσχέδιο",
+        "πιο προσφατο νομοσχεδιο",
+        "τι ψηφίστηκε πρόσφατα",
+        "τι ψηφιστηκε προσφατα",
+    )
+    return any(marker in n for marker in needles)
+
+
+def is_greeting(question: str) -> bool:
+    """Απλός χαιρετισμός / έναρξη συνομιλίας χωρίς νομοθετικό αντικείμενο."""
+    n = _normalize_q(question)
+    if not n or len(n) > 72:
+        return False
+    if n.endswith("?") or n.endswith(";"):
+        return False
+    tokens = frozenset(
+        """
+        γεια γειά χαίρετε χαιρετε καλημέρα καλημερα καλησπέρα καλησπερα hey hi hello καληνυχτα
+        καληνύχτα good morning gd
+        """.split()
+    )
+    parts = frozenset(n.replace("!", "").replace(".", "").split())
+    return bool(parts and parts <= tokens)
+
+
+def is_capabilities_question(question: str) -> bool:
+    n = _normalize_q(question)
+    needles = (
+        "τι μπορείς να κάνεις",
+        "τι μπορεις να κανεις",
+        "τι μπορείτε να κάνετε",
+        "τι δυνατότητες έχεις",
+        "με τι μπορείς να βοηθήσεις",
+        "με τι μπορεις να βοηθησεις",
+        "τι κάνεις ως εργαλείο",
+        "τι κάνεις ως εφαρμογή",
+        "πώς σε χρησιμοποιώ",
+        "πως σε χρησιμοποιω",
+    )
+    return any(k in n for k in needles)
+
+
+def is_general_assistant_question(question: str) -> bool:
+    """Γενικές ερωτήσεις χωρίς ανάγνωση περιεχομένου νόμου (γειαρισμός, δυνατότητες, μικρά FAQ)."""
+    return is_greeting(question) or is_capabilities_question(question) or (
+        _looks_like_general_assistant_ping(question)
+    )
+
+
+def is_general_question(question: str) -> bool:
+    """Ίδια λογική με `is_general_assistant_question` (για σαφέστερη ονοματολογία ροής)."""
+    return is_general_assistant_question(question)
+
+
+def _looks_like_general_assistant_ping(question: str) -> bool:
+    n = _normalize_q(question)
+    if not n:
+        return False
+    if ("τι κάνεις" in n or "τι κανείς" in n) and (
+        "νόμο" not in n
+        and "νομοσχέδιο" not in n
+        and "κείμενο" not in n
+        and "άρθρο" not in n
+        and "αρθρο" not in n
+    ):
+        return True
+    if n in {"τι είσαι", "τι είσαι εσύ"}:
+        return True
+    if any(n.startswith(p) for p in ("ευχαριστώ", "ευχαριστω", "thanks", "thank you")):
+        return True
+    return False
+
+
+def try_general_conversational_response(question: str) -> str | None:
+    """Φυσικές σύντομες απαντήσεις χωρίς embeddings/LLM (εκτός αν δεν ταιριάζει κανένα template)."""
+    if is_metadata_question(question):
+        return None
+    n = _normalize_q(question)
+
+    caps_text = (
+        "Μπορώ να βοηθήσω να κατανοήσεις νόμους, νομοσχέδια και κοινοβουλευτικές διαδικασίες που έχουν "
+        "ενσωματωθεί στη βάση μου. Μπορώ να δώσω περιλήψεις, να εξηγήσω τι αλλάζει πρακτικά και να "
+        "δείξω τις σχετικές πηγές/σελίδες."
+    )
+    greeting_text = (
+        "Καλησπέρα! Μπορείτε να με ρωτήσετε για νόμους, νομοσχέδια ή κοινοβουλευτικές συνεδριάσεις που "
+        "έχουν ενσωματωθεί στη βάση."
+    )
+    tic_kaneis = (
+        "Είμαι βοηθός νομοθεσίας· αναζητώ στα επίσημα κείμενα που είναι φορτωμένα εδώ και σας "
+        "απαντάω με κατανοητικό τρόπο. Αν ρωτήσετε για συγκεκριμένο άρθρο, διάταξη ή διαδικασία που "
+        "συμπεριλαμβάνεται στα διαθέσιμα απόσπασματα, μπορώ να επεξηγήσω και να συνοψίσω."
+    )
+
+    if is_greeting(question):
+        return greeting_text
+    if is_capabilities_question(question):
+        return caps_text
+    if "τι κάνεις" in n or "τι κανείς" in n:
+        return tic_kaneis
+    if any(n.startswith(p) for p in ("ευχαριστώ", "ευχαριστω", "thanks", "thank you")):
+        return "Παρακαλώ! Αν προκύψει άλλη ερώτηση επί των διαθέσιμων εγγράφων, είμαι στη διάθεσή σας."
+    if n in {"τι είσαι", "τι είσαι εσύ"}:
+        return caps_text
+
+    return None
+
+
+def needs_structured_legal_sections(question: str) -> bool:
+    """
+    True όταν η ερώτηση αφορά περιεχόμενο νόμου, νομοσχεδίου, εκθέσεων ή συστατικών κοινοβούλου όπως πρακτικά/ψηφοφορίες.
+    Για χαιρετισμούς/καταμέτρηση βάσης/γενικά FAQ επιστρέφει False.
+    """
+    if is_general_assistant_question(question) or is_metadata_question(question):
+        return False
+
+    n = _normalize_q(question)
+    if not n:
+        return False
+
+    markers = (
+        "τι προβλέπει",
+        "τι προβλεπει",
+        "τι προνοεί",
+        "τι προνοει",
+        "τι διατάζει",
+        "τι διαταζει",
+        "πότε ισχύει",
+        "ποτε ισχυει",
+        "ως προς τις διατάξεις",
+        "ως προς τισ διατάξεις",
+        "τι λέει ο νόμος",
+        "τι λεει ο νομος",
+        " τι λέει ο ",
+        "άρθρο ",
+        "άρθρου ",
+        "άρθρα ",
+        "αρθρο ",
+        "αρθρα ",
+        "διάταξη",
+        "διαταξη",
+        "διατάξεις",
+        "καταργείται",
+        "καταργειται",
+        "αντικαθίσταται",
+        "νομοσχέδιο",
+        "νομοσχεδιο",
+        "σχέδιο νόμου",
+        "σχεδιο νομου",
+        " νόμο ",
+        " νόμους",
+        "νόμους",
+        " τι αλλάζει ",
+        "τι αλλαγές",
+        " τι αλλαγές ",
+        "τι ψηφίστηκε",
+        "τι ψηφιστηκε",
+        "ποιους αφορά",
+        "ποιους αφορα",
+        " τι αφορά ",
+        "περίληψη νομοσχεδ",
+        "σύνοψη νομοσχεδ",
+        " συνοψη ",
+        "περιληψη",
+        "αιτιολογική έκθεση",
+        "αιτιολογικη εκθεση",
+        "συζητήθηκε στην ολομέλεια",
+        " τι συζητήθηκε ",
+        "συνεδρίαση",
+        "συνεδριάσεις",
+        "ολομέλεια",
+        "ολομελεια",
+        "επιτροπή νομικών",
+        "ψηφοφορία",
+        " ψηφοφορία",
+        "τροπολογία",
+        "τροπολογι",
+        " επίσημο κείμενο ",
+    )
+    return any(m in n for m in markers)
+
+
+def format_knowledge_base_metadata_answer() -> str:
+    """Στατική ενημέρωση φορτωμένης βάσης (χωρίς LLM/embeddings)."""
+    n_sources, n_chunks, unique_sources = get_knowledge_base_summary()
+    if not unique_sources:
+        line_list = "_Δεν διακρίνονται επωνυμίες πηγών στο τρέχον αρχείο._"
+    else:
+        line_list = "\n".join(f"- {s}" for s in unique_sources)
+
+    return (
+        f"Αυτή τη στιγμή έχουν ενσωματωθεί **{n_sources}** πηγές/έγγραφα στη βάση γνώσης, "
+        f"χωρισμένα σε **{n_chunks}** αποσπάσματα για αναζήτηση.\n\n"
+        "Οι διαθέσιμες πηγές είναι:\n"
+        f"{line_list}\n\n"
+        "Σημείωση: ο αριθμός αυτός αφορά τα έγγραφα που έχουν εισαχθεί στο demo, όχι το σύνολο της ελληνικής νομοθεσίας."
+    )
+
+
 # --- ΛΟΓΙΚΗ ΑΠΑΝΤΗΣΕΩΝ ---
 def get_answer(question: str) -> str:
     if not chunks:
         return "Δεν υπάρχουν ακόμη δεδομένα στη βάση. Χρειάζεται εισαγωγή νόμων/εγγράφων."
 
+    if is_metadata_question(question):
+        return format_knowledge_base_metadata_answer()
+
+    gen_reply = try_general_conversational_response(question)
+    if gen_reply is not None:
+        return gen_reply
+
     try:
-        q_emb = embed_text(question)
+        # Demo mapping for latest active bill
+        retrieval_question = (
+            DEMO_LATEST_BILL_REWRITE_QUESTION
+            if is_latest_bill_question(question)
+            else question
+        )
+
+        q_emb = embed_text(retrieval_question)
 
         scores = []
         for ch in chunks:
@@ -135,100 +553,79 @@ def get_answer(question: str) -> str:
             )
 
         context = build_context(top)
+        use_structured = needs_structured_legal_sections(question)
 
-        system_prompt = (
-            "Είσαι ένας ακριβής, ευγενικός βοηθός κοινοβουλευτικής και νομοθετικής πληροφόρησης.\n"
-            "Μπορείς να βοηθάς με νόμους σε ισχύ, αλλά ΚΑΙ με υλικό που αφορά **τρέχουσα νομοθετική δραστηριότητα**, όσο υπάρχει σχετικό περιεχόμενο "
-            "στο Κείμενο: π.χ. **νομοσχέδια / σχέδια νόμου**, **συνεδριάσεις ή πρακτικά αν εμφανίζονται στα αποσπάσματα**, "
-            "**συζητήσεις επιτροπών** αν αναφέρονται σε αυτά, **επεξηγηματικές εκθέσεις ή εισηγητικά κείμενα**, **τροπολογίες** "
-            "ή άλλα συνημμένα όπως διακρίνονται στις Πηγές.\n"
-            "\n"
-            "ΚΑΝΟΝΑΣ ΤΕΚΜΗΡΙΩΣΗΣ: Απαντάς ΜΟΝΟ με ό,τι υποστηρίζεται από το Κείμενο (με παραπομπές Πηγή/Σελίδα). "
-            "Μην ισχυριστείς ότι υπάρχει «πιο πρόσφατη» εξέλιξη αν δεν εμφανίζεται στο Κείμενο· "
-            "αν λείπει η σχετική πληροφορία ή το κείμενο είναι παλαιό σε σχέση με την ερώτηση για «τελευταίο νομοσχέδιο / τελευταία ψηφοφορία», "
-            "διευκρίνισε ρητά ότι προκύπτει ΜΟΝΟ από τις διαθέσιμες σελίδες και τι δεν διαπιστώνεται από αυτές.\n"
-            "\n"
-            "Όταν η ερώτηση αφορά νομοσχέδιο / ψήφιση / συνεδρίαση, και το Κείμενο επαρκεί, κάλυψε όσο είναι δυνατό τα εξής (πάντα με βάση το Κείμενο):\n"
-            "- **Τι συζητήθηκε / τι περιλαμβάνει η πρόταση ή η συζήτηση** (με βάση σχετικά αποσπάσματα)\n"
-            "- **Τι ψηφίστηκε / τι καταλήγει το κείμενο ή η ψηφοφορία** αν περιέχεται στα διαθέσιμα αποσπάσματα\n"
-            "- **Ποιους αφορά** και **τι αλλάζει πρακτικά**\n"
-            "\n"
-            "1) Αν βρίσκεις πληροφορία στο Κείμενο, εξήγησέ την με σαφήνεια και παραπομπές (Πηγή, Σελίδα).\n"
-            "2) Αν η ερώτηση είναι γενική (π.χ. 'τι μπορείς να κάνεις;' ή 'τι υλικό έχεις;'), περιέγραψε τι καλύπτεται από τις διαθέσιμες Πηγές όπως εμφανίζονται στο Κείμενο.\n"
-            "3) Αν δεν βρίσκεις τίποτα σχετικό, μη λες μόνο 'Δεν προκύπτει'. Πρότεινε στον χρήστη λέξεις-κλειδιά από το Κείμενο για επαναλαμβανόμενη αναζήτηση.\n"
-            "\n"
-            "ΚΡΙΣΙΜΟ — Κάθε απάντηση πρέπει να ακολουθεί πάντα την ίδια δομή με τέσσερις ενότητες, με επικεφαλίδες markdown "
-            "(με ## και τον τίτλο στην ίδια γραμμή), με τη σειρά που ακολουθεί· μην αλλάξεις ούτε παραλείψεις τίτλους:\n"
-            "## Σύντομη απάντηση\n"
-            "(1–3 προτάσεις· αν η ερώτηση ζητά «τι ψηφίστηκε στο τελευταίο νομοσχέδιο», αν δεν διακρίνεται «τελευταίο» από το Κείμενο, πες ρητά ποια πράξη ή σχετικό μέρος βρέθηκε ή ότι από τα έγγραφα δεν διαπιστώνεται επάρκεια για «τελευταίο»)\n\n"
-            "## Τι αλλάζει πρακτικά\n"
-            "(σε απλά ελληνικά τι ισχύει, ποιες ρυθμίσεις/συνέπειες απορρέουν ή τι συμπέρασμα υποδεικνύει το Κείμενο)\n\n"
-            "## Ποιους αφορά\n"
-            "(κατηγορίες ανθρώπων ή φορέων· αν δεν διευκρινίζεται στο Κείμενο, διευκρίνισέ το ρητά)\n\n"
-            "## Πηγές\n"
-            "(κύριες παραπομπές που στηρίζουν την απάντηση — Πηγή και Σελίδα όπως στο Κείμενο). "
-            "Μην προσθέτεις πληροφορία που δεν επαληθεύεται στο Κείμενο· αν κάνεις υποθέσεις ή συμπληρώνεις χωρίς στήριξη από τα αποσπάσματα, "
-            "διευκρίνισέ το ρητά και μην την παρουσιάζεις ως περιεχόμενο των εγγράφων.\n"
+        base_scope = (
+            "Είσαι ακριβής, ευγενικός βοηθός κοινοβουλευτικής και νομοθετικής πληροφόρησης.\n"
+            "Βασίζεσαι στο «Κείμενο» (επίσημα αποσπάσματα με Πηγή/Σελίδα): νόμοι σε ισχύ, νομοσχέδια, εκθέσεις "
+            "(π.χ. αιτιολογική ή επεξηγηματική), τροπολογίες, πρακτικά/συνεδριάσεις όταν εμφανίζονται στα αποσπάσματα.\n\n"
+            "ΚΑΝΟΝΑΣ ΤΕΚΜΗΡΙΩΣΗΣ: Μην παρουσιάζεις ως γεγονός ό,τι δεν προκύπτει από το Κείμενο. Μην ισχυριστείς "
+            "«πιο πρόσφατη» εξέλιξη αν δεν εμφανίζεται στο Κείμενο· για ερωτήσεις «τελευταίο νομοσχέδιο / τελευταία ψηφοφορία» "
+            "διευκρινίζεις αν τα έγγραφα συγκεντρωμένα στην αναζήτηση επαρκούν ή όχι για τέτοια χρονική κρίση.\n\n"
         )
+
+        if use_structured:
+            system_prompt = (
+                base_scope
+                + "Η ερώτηση αφορά περιεχόμενο νόμου, νομοσχεδίου, έκθεσης, τροπολογίας ή συνεδρίασης που αξιολογείται "
+                "από τα κείμενα.\n"
+                "ΚΡΙΣΙΜΟ — Οργάνωσε την απάντηση με ακριβώς τέσσερις ενότητες markdown (## και τίτλος στην ίδια γραμμή), "
+                "με την παρακάτω σειρά· μην αλλάξεις ούτε παραλείψεις τίτλους:\n"
+                "## Σύντομη απάντηση\n"
+                "(1–3 προτάσεις· αν ζητείται «τι ψηφίστηκε στο τελευταίο νομοσχέδιο» χωρίς διακριτή «τελευταία» διάσταση "
+                "από το Κείμενο, το διευκρινίζεις ρητά)\n\n"
+                "## Τι αλλάζει πρακτικά\n"
+                "(σε απλά ελληνικά πρακτικές συνέπειες/ρυθμίσεις όπως στο Κείμενο)\n\n"
+                "## Ποιους αφορά\n"
+                "(κατηγορίες φορέων/πολιτών αν προκύπτει· αλλιώς ρητά πως δεν καθορίζεται)\n\n"
+                "## Πηγές\n"
+                "(βασικές παραπομπές που στηρίζουν την απάντηση, με Πηγή και Σελίδα όπως στο Κείμενο). Μην προσθέτεις "
+                "ψευδο-γεγονότα· αν υπάρχει επέκταση ή υπόθεση χωρίς στήριξη σε απόσπασμα, το επισημαίνεις ρητά.\n"
+                "Όπου επαρκεί το Κείμενο για νομοσχέδιο/ψήφιση/συζήτηση, κάλυψέ τα ανάλογα τα εμφανιζόμενα αποσπάσματα.\n"
+                "Αν δεν βρίσκεις επαρκές σχετικό απόσπασμα, μη μένεις μόνο σε «δεν προκύπτει»: πρότεινε λέξεις-κλειδιά "
+                "από τις διαθέσιμες Πηγές.\n"
+            )
+        else:
+            system_prompt = (
+                base_scope
+                + "Χρησιμοποίησε τις επικεφαλίδες ## Σύντομη απάντηση, ## Τι αλλάζει πρακτικά, ## Ποιους αφορά, ## Πηγές "
+                "μόνο όταν η ερώτηση αφορά συγκεκριμένο περιεχόμενο νόμου, νομοσχεδίου, έκθεσης, τροπολογίας ή συνεδρίασης που "
+                "απαιτεί ανάγνωση επί των κειμένων· εδώ η ερώτηση δεν πληροί την τυποποιημένη τετράδα.\n"
+                "Απάντα φυσικά και συνοπτικά — συνήθως ένα ή δύο μικρά εδάφια ή σύντομη λίστα, χωρίς να επιβάλλεις αυτές τις ενότητες.\n"
+                "Παραπομπές Πηγή/Σελίδα όταν τις χρειάζεται ρητά η απάντηση ή ο χρήστης· μην επιβάλλεις υποχρεωτικά τμήμα "
+                "«Πηγές» ή κατάλογο πηγών σε εισαγωγικά θέματα.\n"
+                "Αν το Κείμενο είναι άτοπο ή ανεπαρκές, εξήγησέ το και πρότεινε πώς να γίνει πιο συγκεκριμένη η ερώτηση ή "
+                "λέξεις-κλειδιά από τις διαθέσιμες Πηγές.\n"
+            )
 
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"Κείμενο:\n{context}\n\nΕρώτηση: {question}"}
+                {"role": "user", "content": f"Κείμενο:\n{context}\n\nΕρώτηση: {question}"},
             ],
-            temperature=0.2
+            temperature=0.2,
         )
         body = response.choices[0].message.content
-        return body + used_sources_footer(top)
+        if use_structured:
+            return body + used_sources_footer(top)
+        return body
 
     except Exception:
         return "⚠️ Προσωρινό σφάλμα. Δοκίμασε ξανά."
 
 # --- CHAT INTERFACE ---
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-DEMO_PROMPTS = [
-    "Τι αλλάζει με την επιστολική ψήφο;",
-    "Ποιους αφορά ο νόμος;",
-    "Δώσε μου σύντομη περίληψη σε απλά ελληνικά.",
-    "Τι ψηφίστηκε στο τελευταίο νομοσχέδιο;",
-]
-
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-st.caption("Παράδειγμα ερωτήσεων για την επίδειξη")
-dc1, dc2, dc3, dc4 = st.columns(4)
-clicked_prompt = None
-with dc1:
-    if st.button(DEMO_PROMPTS[0], key="demo_vote_by_mail"):
-        clicked_prompt = DEMO_PROMPTS[0]
-with dc2:
-    if st.button(DEMO_PROMPTS[1], key="demo_who_law"):
-        clicked_prompt = DEMO_PROMPTS[1]
-with dc3:
-    if st.button(DEMO_PROMPTS[2], key="demo_summary"):
-        clicked_prompt = DEMO_PROMPTS[2]
-with dc4:
-    if st.button(DEMO_PROMPTS[3], key="demo_last_bill_vote"):
-        clicked_prompt = DEMO_PROMPTS[3]
-
-st.caption(
-    "Το εργαλείο παρέχει ενημερωτική υποστήριξη βασισμένη σε επίσημα κείμενα "
-    "και δεν υποκαθιστά νομική ή θεσμική κρίση."
-)
-
-if clicked_prompt is not None:
-    st.session_state.messages.append({"role": "user", "content": clicked_prompt})
+if clicked_prompt_demo is not None:
+    st.session_state.messages.append({"role": "user", "content": clicked_prompt_demo})
     with st.chat_message("user"):
-        st.markdown(clicked_prompt)
+        st.markdown(clicked_prompt_demo)
     with st.chat_message("assistant"):
         with st.spinner("Σκέφτεται..."):
-            answer = get_answer(clicked_prompt)
+            answer = get_answer(clicked_prompt_demo)
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
 
@@ -242,3 +639,8 @@ if prompt := st.chat_input("Ερώτηση προς τον βοηθό νομοθ
             answer = get_answer(prompt)
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
+
+st.markdown(
+    '<p style="font-size:0.74rem;line-height:1.45;color:rgba(107,114,128,0.78);text-align:center;max-width:36rem;margin:1.65rem auto 0.4rem;padding:0 0.5rem;">Το εργαλείο παρέχει ενημερωτική υποστήριξη βασισμένη σε επίσημα κείμενα και δεν υποκαθιστά νομική ή θεσμική κρίση.</p>',
+    unsafe_allow_html=True,
+)
