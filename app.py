@@ -624,7 +624,7 @@ if clicked_prompt_demo is not None:
     with st.chat_message("user"):
         st.markdown(clicked_prompt_demo)
     with st.chat_message("assistant"):
-        with st.spinner("Σκέφτεται..."):
+        with st.spinner("Αναζήτηση στα επίσημα κείμενα..."):
             answer = get_answer(clicked_prompt_demo)
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
@@ -635,7 +635,7 @@ if prompt := st.chat_input("Ερώτηση προς τον βοηθό νομοθ
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        with st.spinner("Σκέφτεται..."):
+        with st.spinner("Αναζήτηση στα επίσημα κείμενα..."):
             answer = get_answer(prompt)
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
